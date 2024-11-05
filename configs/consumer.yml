@@ -1,0 +1,15 @@
+log_level: "info"
+clients_quantity: 10
+persistence:
+  host: "localhost"
+  port: 5432
+  username: "postgres"
+  db_name: "postgres"
+  password: "mysecretpassword"
+  connection_max_lifetime: 100s
+  max_idle_connections: 50
+  max_open_connections: 50
+processor:
+  processing_routines: 50
+  unprocessed_tasks_queue_size: 10000
+  processed_tasks_queue_size: 10000

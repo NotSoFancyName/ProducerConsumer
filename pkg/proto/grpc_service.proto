@@ -1,0 +1,41 @@
+syntax = "proto3";
+package proto;
+
+option go_package = "github.com/NotSoFancyName/producer-consumer/pkg/proto";
+
+import "google/protobuf/timestamp.proto";
+
+enum StateType {
+  UNKNOWN_STATE = 0;
+  RECEIVED = 1;
+  PROCESSING = 2;
+  DONE = 3;
+}
+
+message TaskRequest {}
+
+message TaskResponse {
+    Task task = 1;
+}
+
+message Task {
+  uint32 id = 1;
+  uint32 type = 2;
+  uint32 value = 3;
+  StateType state = 4;
+  google.protobuf.Timestamp creation_time = 5;
+  google.protobuf.Timestamp last_update_time = 6;
+}
+
+message TaskFinishedRequest {
+  uint32 id = 1;
+}
+
+message TaskFinishedResponse {}
+
+service TaskProducer {
+  rpc GetTask(TaskRequest) returns (stream TaskResponse) {}
+  rpc NotifyTaskFinished(TaskFinishedRequest) returns (TaskFinishedResponse) {}
+}
+
+

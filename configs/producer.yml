@@ -1,0 +1,13 @@
+log_level: "info"
+persistence:
+  host: "localhost"
+  port: 5432
+  username: "postgres"
+  db_name: "postgres"
+  password: "mysecretpassword"
+  connection_max_lifetime: 100s
+  max_idle_connections: 50
+  max_open_connections: 50
+producer:
+  task_production_rate: 1000000
+  max_pending_tasks: 10000
