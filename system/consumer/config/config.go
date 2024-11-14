@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/NotSoFancyName/producer-consumer/system/consumer/client"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -10,10 +11,10 @@ import (
 )
 
 type Config struct {
-	ClientsQuantity   int                `yaml:"clients_quantity"`
-	LogLevel          string             `yaml:"log_level"`
-	PersistenceConfig persistence.Config `yaml:"persistence"`
-	ProcessorConfig   processor.Config   `yaml:"processor"`
+	LogLevel          string                   `yaml:"log_level"`
+	PersistenceConfig persistence.Config       `yaml:"persistence"`
+	ProcessorConfig   processor.Config         `yaml:"processor"`
+	RateLimiterConfig client.RateLimiterConfig `yaml:"rate_limiter_config"`
 }
 
 func Load(filename string) (*Config, error) {

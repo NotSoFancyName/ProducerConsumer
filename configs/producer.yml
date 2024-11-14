@@ -3,7 +3,7 @@ persistence:
   host: "localhost"
   port: 5432
   username: "postgres"
-  db_name: "postgres"
+  db_name: "tasks"
   password: "mysecretpassword"
   connection_max_lifetime: 100s
   max_idle_connections: 50

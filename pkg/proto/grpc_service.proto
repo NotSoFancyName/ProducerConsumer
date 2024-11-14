@@ -34,8 +34,8 @@ message TaskFinishedRequest {
 message TaskFinishedResponse {}
 
 service TaskProducer {
-  rpc GetTask(TaskRequest) returns (stream TaskResponse) {}
-  rpc NotifyTaskFinished(TaskFinishedRequest) returns (TaskFinishedResponse) {}
+  rpc GetTask(TaskRequest) returns (TaskResponse) {}
+  rpc FinishTask(TaskFinishedRequest) returns (TaskFinishedResponse) {}
 }
 
 

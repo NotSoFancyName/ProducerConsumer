@@ -4,8 +4,20 @@ version: '3.8'
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  postgres_data: {}
 
 services:
+  postgres:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: "mysecretpassword"
+      POSTGRES_DB: "tasks"
+      POSTGRES_USER: "postgres"
   prometheus:
     image: prom/prometheus:latest
     container_name: metrics
@@ -15,10 +27,6 @@ services:
       - prometheus_data:/metrics
     command:
       - '--config.file=/etc/metrics/metrics.yml'
-      - '--storage.tsdb.path=/metrics'
-      - '--web.console.libraries=/etc/metrics/console_libraries'
-      - '--web.console.templates=/etc/metrics/consoles'
-      - '--web.enable-lifecycle'
     expose:
       - 9090
     ports:

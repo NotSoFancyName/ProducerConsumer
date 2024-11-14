@@ -19,7 +19,7 @@ import (
 	"github.com/NotSoFancyName/producer-consumer/system/producer/config"
 	"github.com/NotSoFancyName/producer-consumer/system/producer/metrics"
 	"github.com/NotSoFancyName/producer-consumer/system/producer/producer"
-	"github.com/NotSoFancyName/producer-consumer/system/producer/server/v1"
+	"github.com/NotSoFancyName/producer-consumer/system/producer/server/v1/server"
 )
 
 var (
@@ -30,7 +30,7 @@ var (
 	pprofPortFlag   = flag.String("pprof-port", ":6061", "PPROF port for the service")
 	metricsPortFlag = flag.String("metrics-port", ":8081", "Port for the metrics service")
 	grpcPortFlag    = flag.String("grpc-port", ":50051", "Port for the gRPC server")
-	configPathFlag  = flag.String("config", "", "Path to the configuration file")
+	configPathFlag  = flag.String("config", "./configs/producer.yml", "Path to the configuration file")
 	versionFlag     = flag.Bool("version", false, "Prints go versionFlag service was build with")
 )
 
@@ -82,7 +82,7 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	grpcService, err := v1.NewGRPCTaskService(producerService, logger)
+	grpcService, err := server.NewGRPCTaskService(producerService, logger)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -95,7 +95,7 @@ func main() {
 		<-ch
 		logger.Info("Shutting down server gracefully...")
 
-		grpcServer.GracefulStop()
+		grpcServer.Stop()
 		metricsService.Stop()
 		logger.Info("Server stopped.")
 	}()

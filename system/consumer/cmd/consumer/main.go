@@ -27,7 +27,7 @@ var (
 	pprofPortFlag   = flag.String("pprof-port", ":6062", "PPROF port for the service")
 	metricsPortFlag = flag.String("metrics-port", ":8082", "Port for the metrics service")
 	grpcPortFlag    = flag.String("grpc-port", ":50051", "Port for the gRPC server to connect to")
-	configPathFlag  = flag.String("config", "", "Path to the configuration file")
+	configPathFlag  = flag.String("config", "./configs/consumer.yml", "Path to the configuration file")
 	versionFlag     = flag.Bool("version", false, "Prints go versionFlag service was build with")
 )
 
@@ -72,20 +72,19 @@ func main() {
 	}
 	processorService.Run()
 
-	logger.Info("Starting metrics service", zap.String("port", *grpcPortFlag))
+	logger.Info("Starting metrics service", zap.String("port", *metricsPortFlag))
 	metricsService := metrics.NewService(processorService, &metrics.Config{Port: *metricsPortFlag}, logger)
 	metricsService.Run()
 
 	logger.Info("Starting client service", zap.String("port", *grpcPortFlag))
-	clientService, err := client.NewService(processorService, &client.Config{ProducerAddress: *grpcPortFlag}, logger)
+	clientService, err := client.NewService(processorService, &client.Config{ProducerAddress: *grpcPortFlag,
+		RateLimiterConfig: cfg.RateLimiterConfig}, logger)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for i := 0; i < cfg.ClientsQuantity; i++ {
-		logger.Info("Starting client service", zap.Int("instance", i))
-		clientService.Run()
-	}
+	logger.Info("Starting client service")
+	clientService.Run()
 
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)

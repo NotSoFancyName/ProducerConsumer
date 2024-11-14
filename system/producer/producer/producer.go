@@ -123,8 +123,6 @@ func (p *producerServiceImpl) GetStats() (*Stats, error) {
 }
 
 func (p *producerServiceImpl) produceTask() (*model.Task, error) {
-	p.logger.Debug("Producing a new producer")
-
 	p.unprocessedTasksMtx.Lock()
 	defer p.unprocessedTasksMtx.Unlock()
 
@@ -149,6 +147,5 @@ func (p *producerServiceImpl) produceTask() (*model.Task, error) {
 	p.newProducedTasks++
 	p.newProducedTasksMtx.Unlock()
 
-	p.logger.Debug("Produced producer", zap.Int("id", createdTask.ID))
 	return createdTask, nil
 }
